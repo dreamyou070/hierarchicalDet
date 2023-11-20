@@ -12,28 +12,26 @@ import cv2
 def main(args) :
 
     print(f'step1. setup config')
+    print(f' (1) base config')
     cfg = get_cfg()
-    print(f'cfg : {cfg}')
-
-    """
-    print(f'(1) diffusiondet config')
+    print(f' (2) diffusiondet config (RCNN Head., Dynamic Conv., Loss., Focal Loss., Diffusion,  Swin Backbones)')
     add_diffusiondet_config(cfg)
+    print(f' (3) model ema config (ema means copy the model, little decay)')
     add_model_ema_configs(cfg)
-    
-    
-    print(f'(2) add config file config')
+    print(f' (4) read config file')
     cfg.merge_from_file(args.config_file)
-    print(f'(3) add opt config')
+    print(f' (5) add opt config')
     cfg.merge_from_list(args.opts)
-    # Set score_threshold for builtin models
+    print(f' (6) set score_threshold for builtin models')
     cfg.MODEL.RETINANET.SCORE_THRESH_TEST = args.confidence_threshold
     cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = args.confidence_threshold
     cfg.MODEL.PANOPTIC_FPN.COMBINE.INSTANCES_CONFIDENCE_THRESH = args.confidence_threshold
     cfg.freeze()
-    """
 
-    """
+    print(f'step2. make demo pipeline')
     demo = VisualizationDemo(cfg)
+
+    """    
     predictor = demo.predictor
     main(predictor)
     img_dir = r'../../563.JPG'
@@ -57,18 +55,6 @@ if __name__ == "__main__":
                         default=[],nargs=argparse.REMAINDER,)
     args = parser.parse_args()
     main(args)
-
-
-
-
-    """
-            Args:
-                image (np.ndarray): an image of shape (H, W, C) (in BGR order).
-                    This is the format used by OpenCV.
-            Returns:
-                predictions (dict): the output of the model.
-                vis_output (VisImage): the visualized image output.
-            """
 
 
     """
