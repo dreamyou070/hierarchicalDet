@@ -277,11 +277,11 @@ class DefaultPredictor:
         outputs = pred(inputs)
     """
 
-    def __init__(self, cfg, i):
+    def __init__(self, cfg)#, i):
         self.cfg = cfg.clone()  # cfg can be modified by model
         self.model = build_model(self.cfg)
         self.model.eval()
-        self.i=i
+        #self.i=i
         if len(cfg.DATASETS.TEST):
             self.metadata = MetadataCatalog.get(cfg.DATASETS.TEST[0])
 
