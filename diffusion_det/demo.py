@@ -30,7 +30,9 @@ def main(args) :
 
     print(f'step2. make demo pipeline')
     demo = VisualizationDemo(cfg)
-
+    predictor = demo.predictor
+    pretrained_main_model = predictor.model
+    print(f'pretrained_main_model : {pretrained_main_model}')
     """    
     predictor = demo.predictor
     main(predictor)

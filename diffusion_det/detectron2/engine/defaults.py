@@ -20,21 +20,17 @@ import torch
 from fvcore.nn.precise_bn import get_bn_modules
 from omegaconf import OmegaConf
 from torch.nn.parallel import DistributedDataParallel
-
 import detectron2.data.transforms as T
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import CfgNode, LazyConfig
 from detectron2.data import (
     MetadataCatalog,
     build_detection_test_loader,
-    build_detection_train_loader,
-)
-from detectron2.evaluation import (
-    DatasetEvaluator,
+    build_detection_train_loader,)
+from detectron2.evaluation import (    DatasetEvaluator,
     inference_on_dataset,
     print_csv_format,
-    verify_results,
-)
+    verify_results,)
 from detectron2.modeling import build_model
 from detectron2.solver import build_lr_scheduler, build_optimizer
 from detectron2.utils import comm
@@ -47,14 +43,12 @@ from detectron2.utils.logger import setup_logger
 from . import hooks
 from .train_loop import AMPTrainer, SimpleTrainer, TrainerBase
 
-__all__ = [
-    "create_ddp_model",
+__all__ = [    "create_ddp_model",
     "default_argument_parser",
     "default_setup",
     "default_writers",
     "DefaultPredictor",
-    "DefaultTrainer",
-]
+    "DefaultTrainer",]
 
 
 def create_ddp_model(model, *, fp16_compression=False, **kwargs):
@@ -250,34 +244,16 @@ def default_writers(output_dir: str, max_iter: Optional[int] = None):
 
 
 class DefaultPredictor:
-    """
-    Create a simple end-to-end predictor with the given config that runs on
-    single device for a single input image.
-    Compared to using the model directly, this class does the following additions:
-    1. Load checkpoint from `cfg.MODEL.WEIGHTS`.
-    2. Always take BGR image as the input and apply conversion defined by `cfg.INPUT.FORMAT`.
-    3. Apply resizing defined by `cfg.INPUT.{MIN,MAX}_SIZE_TEST`.
-    4. Take one input image and produce a single output, instead of a batch.
-
-    This is meant for simple demo purposes, so it does the above steps automatically.
-    This is not meant for benchmarks or running complicated inference logic.
-    If you'd like to do anything more complicated, please refer to its source code as
-    examples to build and use the model manually.
-
-    Attributes:
-        metadata (Metadata): the metadata of the underlying dataset, obtained from
-            cfg.DATASETS.TEST.
-    Examples:
-    ::
-        pred = DefaultPredictor(cfg)
-        inputs = cv2.imread("input.jpg")
-        outputs = pred(inputs)
-    """
 
     def __init__(self, cfg) :     #, i):
+
         self.cfg = cfg.clone()  # cfg can be modified by model
+        # -------------------------------------------------------------------------------------------------------------------
+        #
+
         self.model = build_model(self.cfg)
         self.model.eval()
+
         #self.i=i
         if len(cfg.DATASETS.TEST):
             self.metadata = MetadataCatalog.get(cfg.DATASETS.TEST[0])
