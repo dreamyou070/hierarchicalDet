@@ -253,9 +253,7 @@ class DefaultPredictor:
     """
     Create a simple end-to-end predictor with the given config that runs on
     single device for a single input image.
-
     Compared to using the model directly, this class does the following additions:
-
     1. Load checkpoint from `cfg.MODEL.WEIGHTS`.
     2. Always take BGR image as the input and apply conversion defined by `cfg.INPUT.FORMAT`.
     3. Apply resizing defined by `cfg.INPUT.{MIN,MAX}_SIZE_TEST`.
@@ -269,7 +267,6 @@ class DefaultPredictor:
     Attributes:
         metadata (Metadata): the metadata of the underlying dataset, obtained from
             cfg.DATASETS.TEST.
-
     Examples:
     ::
         pred = DefaultPredictor(cfg)
@@ -284,14 +281,9 @@ class DefaultPredictor:
         #self.i=i
         if len(cfg.DATASETS.TEST):
             self.metadata = MetadataCatalog.get(cfg.DATASETS.TEST[0])
-
         checkpointer = DetectionCheckpointer(self.model)
         checkpointer.load(cfg.MODEL.WEIGHTS)
-
-        self.aug = T.ResizeShortestEdge(
-            [cfg.INPUT.MIN_SIZE_TEST, cfg.INPUT.MIN_SIZE_TEST], cfg.INPUT.MAX_SIZE_TEST
-        )
-
+        self.aug = T.ResizeShortestEdge([cfg.INPUT.MIN_SIZE_TEST, cfg.INPUT.MIN_SIZE_TEST], cfg.INPUT.MAX_SIZE_TEST)
         self.input_format = cfg.INPUT.FORMAT
         assert self.input_format in ["RGB", "BGR"], self.input_format
 

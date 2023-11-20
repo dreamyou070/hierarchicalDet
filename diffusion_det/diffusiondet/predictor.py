@@ -13,7 +13,9 @@ from detectron2.utils.visualizer import ColorMode, Visualizer
 
 
 class VisualizationDemo(object):
-    def __init__(self, cfg, instance_mode=ColorMode.IMAGE, parallel=False):
+    def __init__(self,
+                 cfg,
+                 instance_mode=ColorMode.IMAGE, parallel=False):
         """
         Args:
             cfg (CfgNode):
@@ -21,19 +23,15 @@ class VisualizationDemo(object):
             parallel (bool): whether to run the model in different processes from visualization.
                 Useful since the visualization logic can be slow.
         """
-        self.metadata = MetadataCatalog.get(
-            cfg.DATASETS.TEST[0] if len(cfg.DATASETS.TEST) else "__unused"
-        )
+        self.metadata = MetadataCatalog.get(cfg.DATASETS.TEST[0] if len(cfg.DATASETS.TEST) else "__unused")
         self.cpu_device = torch.device("cpu")
         self.instance_mode = instance_mode
-
         self.parallel = parallel
         if parallel:
             num_gpu = torch.cuda.device_count()
             self.predictor = AsyncPredictor(cfg, num_gpus=num_gpu)
         else:
             self.predictor = DefaultPredictor(cfg)
-        
         self.threshold = cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST  # workaround
 
     def run_on_image(self, image):
@@ -41,7 +39,6 @@ class VisualizationDemo(object):
         Args:
             image (np.ndarray): an image of shape (H, W, C) (in BGR order).
                 This is the format used by OpenCV.
-
         Returns:
             predictions (dict): the output of the model.
             vis_output (VisImage): the visualized image output.
