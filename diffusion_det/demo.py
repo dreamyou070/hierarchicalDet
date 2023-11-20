@@ -66,38 +66,23 @@ if __name__ == "__main__":
                         metavar="FILE",help="path to config file",)
     parser.add_argument("--webcam", action="store_true", help="Take inputs from webcam.")
     parser.add_argument("--video-input", help="Path to video file.")
-    parser.add_argument("--input",
-        nargs="+",
-        help="A list of space separated input images; "
-             "or a single glob pattern such as 'directory/*.jpg'",
-    )
-    parser.add_argument(
-        "--output",
-        help="A file or directory to save output visualizations. "
-             "If not given, will show output in an OpenCV window.",
-    )
-
-    parser.add_argument(
-        "--confidence-threshold",
-        type=float,
-        default=0.5,
-        help="Minimum score for instance predictions to be shown",
-    )
-    parser.add_argument(
-        "--opts",
-        help="Modify config options using the command-line 'KEY VALUE' pairs",
-        default=[],
-        nargs=argparse.REMAINDER,
-    )
+    parser.add_argument("--input", nargs="+",
+                        help="A list of space separated input images; "
+                             "or a single glob pattern such as 'directory/*.jpg'",)
+    parser.add_argument("--output",help="A file or directory to save output visualizations. "
+                                        "If not given, will show output in an OpenCV window.",)
+    parser.add_argument("--confidence-threshold",type=float,default=0.5,
+                        help="Minimum score for instance predictions to be shown",)
+    parser.add_argument("--opts",help="Modify config options using the command-line 'KEY VALUE' pairs",
+                        default=[],nargs=argparse.REMAINDER,)
     args = parser.parse_args()
     setup_logger(name="fvcore")
     logger = setup_logger()
     logger.info("Arguments: " + str(args))
-
     cfg = setup_cfg(args)
-
     demo = VisualizationDemo(cfg)
-
+    
+    """
     if args.input:
         if len(args.input) == 1:
             args.input = glob.glob(os.path.expanduser(args.input[0]))
@@ -106,16 +91,13 @@ if __name__ == "__main__":
             # use PIL, to be consistent with evaluation
             img = read_image(path, format="BGR")
             start_time = time.time()
+            
             predictions, visualized_output = demo.run_on_image(img)
-            logger.info(
-                "{}: {} in {:.2f}s".format(
-                    path,
-                    "detected {} instances".format(len(predictions["instances"]))
-                    if "instances" in predictions
-                    else "finished",
-                    time.time() - start_time,
-                )
-            )
+            logger.info("{}: {} in {:.2f}s".format(path,
+                                                   "detected {} instances".format(len(predictions["instances"]))
+                                                   if "instances" in predictions
+                                                   else "finished",
+                                                   time.time() - start_time,))
 
             if args.output:
                 if os.path.isdir(args.output):
@@ -183,3 +165,4 @@ if __name__ == "__main__":
             output_file.release()
         else:
             cv2.destroyAllWindows()
+    """
