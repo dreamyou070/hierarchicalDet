@@ -54,6 +54,13 @@ def test_opencv_video_format(codec, file_ext):
             return True
         return False
 
+from PIL import Image
+import cv2
+
+def main(predictor) :
+
+    img_dir = r'../../563.JPG'
+    cv2_img = cv2.imread(img_dir)
 
 if __name__ == "__main__":
     mp.set_start_method("spawn", force=True)
@@ -77,8 +84,21 @@ if __name__ == "__main__":
     logger = setup_logger()
     logger.info("Arguments: " + str(args))
     cfg = setup_cfg(args)
-    print(f'cfg: {cfg}')
     demo = VisualizationDemo(cfg)
+    predictor = demo.predictor
+    main(predictor)
+
+
+
+    """
+            Args:
+                image (np.ndarray): an image of shape (H, W, C) (in BGR order).
+                    This is the format used by OpenCV.
+            Returns:
+                predictions (dict): the output of the model.
+                vis_output (VisImage): the visualized image output.
+            """
+
 
     """
     if args.input:
