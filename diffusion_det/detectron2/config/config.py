@@ -104,7 +104,6 @@ def get_cfg() -> CfgNode:
         a detectron2 CfgNode instance.
     """
     from .defaults import _C
-
     return _C.clone()
 
 
