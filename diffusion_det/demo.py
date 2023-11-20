@@ -62,7 +62,7 @@ def main(predictor) :
     img_dir = r'../../563.JPG'
     cv2_img = cv2.imread(img_dir)
     output = predictor(cv2_img)
-    print(type(output))
+    print(output.keys())
 
 if __name__ == "__main__":
     mp.set_start_method("spawn", force=True)
