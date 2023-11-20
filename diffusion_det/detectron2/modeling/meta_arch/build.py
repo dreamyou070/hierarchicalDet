@@ -17,6 +17,7 @@ def build_model(cfg):
     Note that it does not load any weights from ``cfg``.
     """
     meta_arch = cfg.MODEL.META_ARCHITECTURE
+    print("meta_arch: ", meta_arch)
 
     model = META_ARCH_REGISTRY.get(meta_arch)(cfg)
     model.to(torch.device(cfg.MODEL.DEVICE))
