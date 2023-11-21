@@ -33,6 +33,7 @@ def main(args) :
     predictor = demo.predictor
     pretrained_main_model = predictor.model
     print(f'pretrained_main_model : {pretrained_main_model}')
+
     """    
     predictor = demo.predictor
     main(predictor)
