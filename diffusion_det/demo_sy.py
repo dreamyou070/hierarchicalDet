@@ -346,7 +346,7 @@ def main(args) :
         if isinstance(images, (list, torch.Tensor)):
             print(f'Here does not using ... ')
             images = nested_tensor_from_tensor_list(images)
-        print(f' images : {type(images)}')
+        print(f' images : {images}')
         # Feature Extraction.
         src = backbone_fpn_model(images.tensor)
         features = list()
