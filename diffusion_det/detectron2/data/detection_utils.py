@@ -143,11 +143,10 @@ def _apply_exif_orientation(image):
     """ exif data is metadata from the image
         when, how, orientation of the image information is in exit metadata """
     orientation = exif.get(_EXIF_ORIENT)
-    print(f'orientation: {orientation}')
     info_dict = {2: Image.FLIP_LEFT_RIGHT,3: Image.ROTATE_180,4: Image.FLIP_TOP_BOTTOM,
                  5: Image.TRANSPOSE, 6: Image.ROTATE_270, 7: Image.TRANSVERSE, 8: Image.ROTATE_90,}
     method = info_dict.get(orientation)
-    print(f'method: {method}')
+    print(f' - orientation: {orientation} -> method: {method}')
     if method is not None:
         return image.transpose(method)
     return image
@@ -167,8 +166,6 @@ def read_image(file_name, format=None):
     """
     with PathManager.open(file_name, "rb") as f:
         image = Image.open(f)
-        print(f'rb read image : {type(image)}')
-
         # work around this bug: https://github.com/python-pillow/Pillow/issues/3973
         image = _apply_exif_orientation(image)
         return convert_PIL_to_numpy(image, format)
