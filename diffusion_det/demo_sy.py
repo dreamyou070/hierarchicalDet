@@ -11,20 +11,15 @@ import tqdm
 import torch
 import multiprocessing as mp
 import argparse
-from hierarchicalDet.diffusion_det.detectron2.utils.logger import setup_logger
-from hierarchicalDet.diffusion_det.detectron2 import get_cfg
-from hierarchicalDet.diffusion_det.detectron2 import MetadataCatalog
-from hierarchicalDet.diffusion_det.detectron2 import VideoVisualizer
-from hierarchicalDet.diffusion_det.detectron2.utils.visualizer import ColorMode, Visualizer
-from hierarchicalDet.diffusion_det.detectron2 import build_model
-import hierarchicalDet.diffusion_det.detectron2.data.transforms as T
-from hierarchicalDet.diffusion_det.detectron2 import DetectionCheckpointer
+from detectron2.utils.logger import setup_logger
+from detectron2 import get_cfg, MetadataCatalog, VideoVisualizer,build_model,DetectionCheckpointer, PathManager
+from detectron2.utils.visualizer import ColorMode, Visualizer
+import detectron2.data.transforms as T
 from fvcore.common.checkpoint import Checkpointer
-import hierarchicalDet.diffusion_det.detectron2.utils.comm as comm
-from hierarchicalDet.diffusion_det.detectron2 import PathManager
+import detectron2.utils.comm as comm
 from torch.nn.parallel import DistributedDataParallel
-from hierarchicalDet.diffusion_det.detectron2.data.detection_utils import read_image
-from hierarchicalDet.diffusion_det.detectron2.checkpoint.c2_model_loading import align_and_update_state_dicts
+from detectron2.data.detection_utils import read_image
+from detectron2.checkpoint.c2_model_loading import align_and_update_state_dicts
 
 class DetectionCheckpointer(Checkpointer):
     """
