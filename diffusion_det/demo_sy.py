@@ -12,14 +12,19 @@ import torch
 import multiprocessing as mp
 import argparse
 from detectron2.utils.logger import setup_logger
-from detectron2 import get_cfg, MetadataCatalog, VideoVisualizer,build_model,DetectionCheckpointer, PathManager
+from detectron2.config import get_cfg
+from detectron2.data import MetadataCatalog
+from detectron2.checkpoint import DetectionCheckpointer
+from detectron2.utils.video_visualizer import VideoVisualizer
 from detectron2.utils.visualizer import ColorMode, Visualizer
 import detectron2.data.transforms as T
 from fvcore.common.checkpoint import Checkpointer
 import detectron2.utils.comm as comm
 from torch.nn.parallel import DistributedDataParallel
 from detectron2.data.detection_utils import read_image
+from detectron2.utils.file_io import PathManager
 from detectron2.checkpoint.c2_model_loading import align_and_update_state_dicts
+from detectron2.modeling import build_model
 
 class DetectionCheckpointer(Checkpointer):
     """
