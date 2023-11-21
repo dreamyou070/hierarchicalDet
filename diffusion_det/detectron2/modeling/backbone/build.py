@@ -1,21 +1,14 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 from detectron2.layers import ShapeSpec
 from detectron2.utils.registry import Registry
-
 from .backbone import Backbone
 
 BACKBONE_REGISTRY = Registry("BACKBONE")
-BACKBONE_REGISTRY.__doc__ = """
-Registry for backbones, which extract feature maps from images
-
-The registered object must be a callable that accepts two arguments:
-
-1. A :class:`detectron2.config.CfgNode`
-2. A :class:`detectron2.layers.ShapeSpec`, which contains the input shape specification.
-
-Registered object must return instance of :class:`Backbone`.
-"""
-
+BACKBONE_REGISTRY.__doc__ = """ Registry for backbones, which extract feature maps from images
+                                The registered object must be a callable that accepts two arguments:
+                                1. A :class:`detectron2.config.CfgNode`
+                                2. A :class:`detectron2.layers.ShapeSpec`, which contains the input shape specification.
+                                Registered object must return instance of :class:`Backbone`. """
 
 def build_backbone(cfg, input_shape=None):
     """
@@ -29,6 +22,9 @@ def build_backbone(cfg, input_shape=None):
 
     backbone_name = cfg.MODEL.BACKBONE.NAME #
     print(f'backbone_name (build_swintransformer_fpn_backbone) : {backbone_name}')
-    backbone = BACKBONE_REGISTRY.get(backbone_name)(cfg, input_shape)
+    # ------------------------------------------------------------------------------------------------------------------
+    # Registry("BACKBONE").get('build_swintransformer_fpn_backbone')(cfg, input_shape)
+    backbone = BACKBONE_REGISTRY.get(backbone_name)
+    backbone = backbone(cfg, input_shape)
     assert isinstance(backbone, Backbone)
     return backbone

@@ -1,24 +1,24 @@
 import numpy as np
 import os
 import tempfile
-import pickle, time, tqdm
+import pickle
 from diffusiondet.predictor import AsyncPredictor
-from diffusiondet import DiffusionDetDatasetMapper, add_diffusiondet_config, DiffusionDetWithTTA
+from diffusiondet import add_diffusiondet_config
 from diffusiondet.util.model_ema import add_model_ema_configs
 from collections import deque
 import cv2
 import torch
-from detectron2.data import MetadataCatalog
-from detectron2.utils.video_visualizer import VideoVisualizer
-from detectron2.utils.visualizer import ColorMode, Visualizer
-from detectron2.modeling import build_model
-import detectron2.data.transforms as T
-from detectron2.checkpoint.detection_checkpoint import DetectionCheckpointer
-from fvcore.common.checkpoint import Checkpointer, PeriodicCheckpointer
-import detectron2.utils.comm as comm
-from detectron2.utils.file_io import PathManager
+from hierarchicalDet.diffusion_det.detectron2 import MetadataCatalog
+from hierarchicalDet.diffusion_det.detectron2 import VideoVisualizer
+from hierarchicalDet.diffusion_det.detectron2.utils.visualizer import ColorMode, Visualizer
+from hierarchicalDet.diffusion_det.detectron2 import build_model
+import hierarchicalDet.diffusion_det.detectron2.data.transforms as T
+from hierarchicalDet.diffusion_det.detectron2 import DetectionCheckpointer
+from fvcore.common.checkpoint import Checkpointer
+import hierarchicalDet.diffusion_det.detectron2.utils.comm as comm
+from hierarchicalDet.diffusion_det.detectron2 import PathManager
 from torch.nn.parallel import DistributedDataParallel
-from detectron2.checkpoint.c2_model_loading import align_and_update_state_dicts
+from hierarchicalDet.diffusion_det.detectron2.checkpoint.c2_model_loading import align_and_update_state_dicts
 
 class DetectionCheckpointer(Checkpointer):
     """
@@ -296,9 +296,9 @@ def test_opencv_video_format(codec, file_ext):
 
 import multiprocessing as mp
 import argparse
-from detectron2.utils.logger import setup_logger
-from detectron2.config import get_cfg
-from detectron2.data.detection_utils import read_image
+from hierarchicalDet.diffusion_det.detectron2.utils.logger import setup_logger
+from hierarchicalDet.diffusion_det.detectron2 import get_cfg
+
 
 def main(args) :
 
@@ -332,8 +332,8 @@ def main(args) :
     model = predictor.model
     print(f' (3.2) loading pretrained model weights')
     checkpointer = predictor.checkpointer #load(path=cfg.MODEL.WEIGHTS)
-    checkpointer.load(path=cfg.MODEL.WEIGHTS)
-    print(f'model : {model.__class__.__name__}')
+    #checkpointer.load(path=cfg.MODEL.WEIGHTS)
+    print(f'model name = DiffusionDet')
     component_models = model.named_children()
     for name, component_model in component_models :
         print(f'  - {name} : {component_model.__class__.__name__}')

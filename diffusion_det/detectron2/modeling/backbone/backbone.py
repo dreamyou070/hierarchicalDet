@@ -2,13 +2,11 @@
 from abc import ABCMeta, abstractmethod
 from typing import Dict
 import torch.nn as nn
-
 from detectron2.layers import ShapeSpec
 
 __all__ = ["Backbone"]
 
-
-class Backbone(nn.Module, metaclass=ABCMeta):
+class Backbone(nn.Module,metaclass=ABCMeta):
     """
     Abstract base class for network backbones.
     """
@@ -23,7 +21,6 @@ class Backbone(nn.Module, metaclass=ABCMeta):
     def forward(self):
         """
         Subclasses must override this method, but adhere to the same return type.
-
         Returns:
             dict[str->Tensor]: mapping from feature name (e.g., "res2") to tensor
         """

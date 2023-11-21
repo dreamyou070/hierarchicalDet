@@ -21,16 +21,17 @@ from collections import OrderedDict
 import torch
 from fvcore.nn.precise_bn import get_bn_modules
 
-import detectron2.utils.comm as comm
-from detectron2.utils.logger import setup_logger
-from detectron2.checkpoint import DetectionCheckpointer
-from detectron2.config import get_cfg
-from detectron2.data import build_detection_train_loader
-from detectron2.engine import DefaultTrainer, default_argument_parser, default_setup, launch, create_ddp_model, \
-    AMPTrainer, SimpleTrainer, hooks
-from detectron2.evaluation import COCOEvaluator, LVISEvaluator, verify_results
-from detectron2.solver.build import maybe_add_gradient_clipping
-from detectron2.modeling import build_model
+import hierarchicalDet.diffusion_det.detectron2.utils.comm as comm
+from hierarchicalDet.diffusion_det.detectron2.utils.logger import setup_logger
+from hierarchicalDet.diffusion_det.detectron2 import DetectionCheckpointer
+from hierarchicalDet.diffusion_det.detectron2 import get_cfg
+from hierarchicalDet.diffusion_det.detectron2 import build_detection_train_loader
+from hierarchicalDet.diffusion_det.detectron2 import DefaultTrainer, default_argument_parser, default_setup, launch, create_ddp_model, \
+    AMPTrainer, SimpleTrainer
+from hierarchicalDet.diffusion_det.detectron2.engine import hooks
+from hierarchicalDet.diffusion_det.detectron2 import COCOEvaluator, LVISEvaluator, verify_results
+from hierarchicalDet.diffusion_det.detectron2.solver.build import maybe_add_gradient_clipping
+from hierarchicalDet.diffusion_det.detectron2 import build_model
 
 from diffusiondet import DiffusionDetDatasetMapper, add_diffusiondet_config, DiffusionDetWithTTA
 from diffusiondet.util.model_ema import add_model_ema_configs, may_build_model_ema, may_get_ema_checkpointer, EMAHook, \
