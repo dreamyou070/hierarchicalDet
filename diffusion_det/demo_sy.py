@@ -7,7 +7,12 @@ from diffusiondet import add_diffusiondet_config
 from diffusiondet.util.model_ema import add_model_ema_configs
 from collections import deque
 import cv2
+import tqdm
 import torch
+import multiprocessing as mp
+import argparse
+from hierarchicalDet.diffusion_det.detectron2.utils.logger import setup_logger
+from hierarchicalDet.diffusion_det.detectron2 import get_cfg
 from hierarchicalDet.diffusion_det.detectron2 import MetadataCatalog
 from hierarchicalDet.diffusion_det.detectron2 import VideoVisualizer
 from hierarchicalDet.diffusion_det.detectron2.utils.visualizer import ColorMode, Visualizer
@@ -18,6 +23,7 @@ from fvcore.common.checkpoint import Checkpointer
 import hierarchicalDet.diffusion_det.detectron2.utils.comm as comm
 from hierarchicalDet.diffusion_det.detectron2 import PathManager
 from torch.nn.parallel import DistributedDataParallel
+from hierarchicalDet.diffusion_det.detectron2.data.detection_utils import read_image
 from hierarchicalDet.diffusion_det.detectron2.checkpoint.c2_model_loading import align_and_update_state_dicts
 
 class DetectionCheckpointer(Checkpointer):
@@ -121,6 +127,7 @@ class DetectionCheckpointer(Checkpointer):
             if "anchor_generator.cell_anchors" in k:
                 incompatible.unexpected_keys.remove(k)
         return incompatible
+
 class DefaultPredictor:
     """ predictor """
     def __init__(self, cfg):
@@ -272,10 +279,8 @@ class VisualizationDemo(object):
             for frame in frame_gen:
                 yield process_predictions(frame, self.predictor(frame))
 
-
 # constants
 WINDOW_NAME = "COCO detections"
-
 
 def test_opencv_video_format(codec, file_ext):
     with tempfile.TemporaryDirectory(prefix="video_format_test") as dir:
@@ -292,13 +297,6 @@ def test_opencv_video_format(codec, file_ext):
         if os.path.isfile(filename):
             return True
         return False
-
-
-import multiprocessing as mp
-import argparse
-from hierarchicalDet.diffusion_det.detectron2.utils.logger import setup_logger
-from hierarchicalDet.diffusion_det.detectron2 import get_cfg
-
 
 def main(args) :
 
@@ -344,6 +342,31 @@ def main(args) :
     print(f'\n step 4. check FPN model')
     backbone_model = model.backbone  # FPN
     FPN_component_models = backbone_model.named_children()
+
+    print(f'\n step 5. image inference')
+
+    for path in tqdm.tqdm(args.input, disable=not args.output):
+        # use PIL, to be consistent with evaluation
+        print(f'(4.1) read image')
+        np_img = read_image(path, format="BGR")
+        predictions = detection_pipeline.run_on_image(np_img)
+        """
+        batched_inputs = 
+
+        images, images_whwh = self.preprocess_image(batched_inputs)
+        if isinstance(images, (list, torch.Tensor)):
+            images = nested_tensor_from_tensor_list(images)
+
+        # Feature Extraction.
+        src = self.backbone(images.tensor)
+        features = list()
+        for f in self.in_features:
+            feature = src[f]
+            features.append(feature)
+        """
+
+
+
     """
     for name, component_model in FPN_component_models :
         print(f'  - [FPN] {name} : {component_model.__class__.__name__}')    

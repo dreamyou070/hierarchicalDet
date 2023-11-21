@@ -713,8 +713,7 @@ size2config = {
 
 @BACKBONE_REGISTRY.register()
 def build_swintransformer_backbone(cfg, input_shape):
-    """
-    """
+
     config = size2config[cfg.MODEL.SWIN.SIZE]
     out_indices = cfg.MODEL.SWIN.OUT_FEATURES
     model = SwinTransformer(

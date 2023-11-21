@@ -275,6 +275,7 @@ class DiffusionDet(nn.Module):
         return sqrt_alphas_cumprod_t * x_start + sqrt_one_minus_alphas_cumprod_t * noise
 
     def forward(self, batched_inputs, do_postprocess=True):
+        print(f'batched_inputs : {batched_inputs}')
         """
         Args:
             batched_inputs: a list, batched outputs of :class:`DatasetMapper` .
