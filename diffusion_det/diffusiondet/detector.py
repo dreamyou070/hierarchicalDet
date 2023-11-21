@@ -190,11 +190,13 @@ class DiffusionDet(nn.Module):
         for time, time_next in time_pairs:
             time_cond = torch.full((batch,), time, device=self.device, dtype=torch.long)
             self_cond = x_start if self.self_condition else None
-
-            preds, outputs_class, outputs_coord = self.model_predictions(backbone_feats, images_whwh, img, time_cond,
-                                                                         self_cond, clip_x_start=clip_denoised)
+            preds, outputs_class, outputs_coord = self.model_predictions(backbone_feats,
+                                                                         images_whwh,
+                                                                         img,
+                                                                         time_cond,
+                                                                         self_cond,
+                                                                         clip_x_start=clip_denoised)
             pred_noise, x_start = preds.pred_noise, preds.pred_x_start
-
             if self.box_renewal:  # filter
                 score_per_image, box_per_image = outputs_class[-1][0], outputs_coord[-1][0]
                 threshold = 0.5
@@ -496,7 +498,9 @@ class DiffusionDet(nn.Module):
         images_whwh = list()
         for bi in batched_inputs:
             h, w = bi["image"].shape[-2:]
-            images_whwh.append(torch.tensor([w, h, w, h], dtype=torch.float32, device=self.device))
+            images_whwh.append(torch.tensor([w, h, w, h],
+                                            dtype=torch.float32,
+                                            device=self.device))
         images_whwh = torch.stack(images_whwh)
 
         return images, images_whwh

@@ -326,20 +326,25 @@ def main(args) :
     FPN_component_models = backbone_fpn_model.named_children()
 
     print(f'\n step 5. image inference')
-
     for path in tqdm.tqdm(args.input, disable=not args.output):
         # use PIL, to be consistent with evaluation
+
         print(f'(4.1) read image')
         np_img = read_image(path, format="BGR")
         original_image = np_img[:, :, ::-1]
         height, width = original_image.shape[:2]
         image = predictor.aug.get_transform(original_image).apply_image(original_image)
         torch_image = torch.as_tensor(image.astype("float32").transpose(2, 0, 1))
-        inputs = {"image": torch_image, "height": height, "width": width}
+        print(f' torch_image : {torch_image.shape}')
+        inputs = {"image": torch_image,
+                  "height": height,
+                  "width": width}
         batched_inputs = [inputs]
+
+        print(f'(4.2) preprocess image')
         images, images_whwh = diffusion_det_model.preprocess_image(batched_inputs)
-        print(f' manually batchwised input (maybe 1, W, H): {inputs["image"].shape}')
         if isinstance(images, (list, torch.Tensor)):
+            print(f'Here does not using ... ')
             images = nested_tensor_from_tensor_list(images)
 
         # Feature Extraction.
@@ -348,6 +353,7 @@ def main(args) :
         for f in diffusion_det_model.in_features:
             feature = src[f]
             features.append(feature)
+
         results = diffusion_det_model.ddim_sample(batched_inputs,
                                                   features,
                                                   images_whwh,
