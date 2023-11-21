@@ -328,21 +328,17 @@ def main(args) :
     print(f' (3.1) make scratch model')
     predictor = detection_pipeline.predictor
     print(f' name of predictor : {predictor.__class__.__name__}')
-    model = predictor.model
+    diffusion_det_model = predictor.model
     print(f' (3.2) loading pretrained model weights')
     checkpointer = predictor.checkpointer #load(path=cfg.MODEL.WEIGHTS)
     #checkpointer.load(path=cfg.MODEL.WEIGHTS)
     print(f'model name = DiffusionDet')
-    component_models = model.named_children()
-    for name, component_model in component_models :
-        print(f'  - {name} : {component_model.__class__.__name__}')
-
-    head_model = model.head         # DynamicHead
-    criterion = model.criterion     # SetCriterionDynamicK
+    backbone_fpn_model = diffusion_det_model.backbone
+    head_model = diffusion_det_model.head         # DynamicHead
+    criterion = diffusion_det_model.criterion     # SetCriterionDynamicK
 
     print(f'\n step 4. check FPN model')
-    backbone_model = model.backbone  # FPN
-    FPN_component_models = backbone_model.named_children()
+    FPN_component_models = backbone_fpn_model.named_children()
 
     print(f'\n step 5. image inference')
 
@@ -355,9 +351,34 @@ def main(args) :
         image = predictor.aug.get_transform(original_image).apply_image(original_image)
         torch_image = torch.as_tensor(image.astype("float32").transpose(2, 0, 1))
         inputs = {"image": torch_image, "height": height, "width": width}
+        batched_inputs = [inputs]
+        images, images_whwh = predictor.preprocess_image(batched_inputs)
         print(f' manually batchwised input (maybe 1, W, H): {inputs["image"].shape}')
+        from diffusiondet.util.misc import nested_tensor_from_tensor_list
+        if isinstance(images, (list, torch.Tensor)):
+            images = nested_tensor_from_tensor_list(images)
 
-        predictions = detection_pipeline.run_on_image(np_img)
+        # Feature Extraction.
+        src = backbone_fpn_model(images.tensor)
+        features = list()
+        for f in diffusion_det_model.in_features:
+            feature = src[f]
+            features.append(feature)
+        results = diffusion_det_model.ddim_sample(batched_inputs,
+                                                  features,
+                                                  images_whwh,
+                                                  images)
+
+
+
+
+
+
+
+
+
+
+        #predictions = detection_pipeline.run_on_image(np_img)
         """
         batched_inputs = 
 

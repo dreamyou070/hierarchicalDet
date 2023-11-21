@@ -61,11 +61,10 @@ def cosine_beta_schedule(timesteps, s=0.008):
 
 @META_ARCH_REGISTRY.register()
 class DiffusionDet(nn.Module):
-    """
-    Implement DiffusionDet
-    """
+    """Implement DiffusionDet"""
 
     def __init__(self, cfg):
+
         super().__init__()
 
         self.device = torch.device(cfg.MODEL.DEVICE)
@@ -75,7 +74,6 @@ class DiffusionDet(nn.Module):
         self.num_proposals = cfg.MODEL.DiffusionDet.NUM_PROPOSALS
         self.hidden_dim = cfg.MODEL.DiffusionDet.HIDDEN_DIM
         self.num_heads = cfg.MODEL.DiffusionDet.NUM_HEADS
-
         # --------------------------------------------------------------------------------------------------------------
         # (1) Build Backbone.
         self.backbone = build_backbone(cfg)
@@ -276,7 +274,7 @@ class DiffusionDet(nn.Module):
 
     def forward(self, batched_inputs, do_postprocess=True):
 
-        input_image = batched_inputs['image']
+        input_image = batched_inputs[0]['image']
         print(f'[tensor] input_image (maybe 3,W,H): {input_image.shape}')
         """
         Args:
@@ -495,7 +493,6 @@ class DiffusionDet(nn.Module):
         """
         images = [self.normalizer(x["image"].to(self.device)) for x in batched_inputs]
         images = ImageList.from_tensors(images, self.size_divisibility)
-
         images_whwh = list()
         for bi in batched_inputs:
             h, w = bi["image"].shape[-2:]
