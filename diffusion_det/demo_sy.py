@@ -337,7 +337,15 @@ def main(args) :
     component_models = model.named_children()
     for name, component_model in component_models :
         print(f'  - {name} : {component_model.__class__.__name__}')
-    backbone_model = model.backbone
+
+    head_model = model.head         # DynamicHead
+    criterion = model.criterion     # SetCriterionDynamicK
+
+    print(f'\n step 4. check FPN model')
+    backbone_model = model.backbone  # FPN
+    FPN_component_models = backbone_model.named_children()
+    for name, component_model in FPN_component_models :
+        print(f'  - [FPN] {name} : {component_model.__class__.__name__}')
     """
     print(f'\n step 4. inference')
     for path in tqdm.tqdm(args.input, disable=not args.output):
