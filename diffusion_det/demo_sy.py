@@ -62,8 +62,6 @@ def main(args) :
     print(cfg)
 
     print(f'\n step 3. ')
-    if len(args.input) == 1:
-        args.input = args.input[0]
     for path in tqdm.tqdm(args.input, disable=not args.output):
         # use PIL, to be consistent with evaluation
         img = read_image(path, format="BGR")
