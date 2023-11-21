@@ -334,6 +334,10 @@ def main(args) :
     checkpointer = predictor.checkpointer #load(path=cfg.MODEL.WEIGHTS)
     checkpointer.load(path=cfg.MODEL.WEIGHTS)
 
+    component_models = model.named_children()
+    for name, component_model in component_models :
+        print(f'  - {name} : {component_model.__class__.__name__}')
+
     """
     print(f'\n step 4. inference')
     for path in tqdm.tqdm(args.input, disable=not args.output):
