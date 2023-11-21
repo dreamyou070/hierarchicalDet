@@ -132,15 +132,17 @@ def _apply_exif_orientation(image):
         (PIL.Image): the PIL image with exif orientation applied, if applicable
     """
     if not hasattr(image, "getexif"):
-        print(f'image is just returned ...')
         return image
+    image.__dict__
     try:
         exif = image.getexif()
+
     except Exception:  # https://github.com/facebookresearch/detectron2/issues/1885
         exif = None
+
     if exif is None:
         return image
-
+    print(f"exif: {exif}")
     orientation = exif.get(_EXIF_ORIENT)
 
     method = {
@@ -172,6 +174,7 @@ def read_image(file_name, format=None):
     """
     with PathManager.open(file_name, "rb") as f:
         image = Image.open(f)
+        print(f'rb read image : {type(image)}')
 
         # work around this bug: https://github.com/python-pillow/Pillow/issues/3973
         image = _apply_exif_orientation(image)

@@ -64,8 +64,8 @@ def main(args) :
     print(f'\n step 3. ')
     for path in tqdm.tqdm(args.input, disable=not args.output):
         # use PIL, to be consistent with evaluation
-        img = read_image(path, format="BGR")
-        print(f'read image : type(img) = {type(img)}')
+        np_img = read_image(path, format="BGR")
+        print(f'read image : type(img) = {type(np_img)}')
 
 
 
