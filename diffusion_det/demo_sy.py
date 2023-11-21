@@ -343,10 +343,10 @@ def main(args) :
 
         print(f'(4.2) preprocess image')
         images, images_whwh = diffusion_det_model.preprocess_image(batched_inputs)
-        if isinstance(images, (list, torch.Tensor)):
-            print(f'Here does not using ... ')
-            images = nested_tensor_from_tensor_list(images)
-        print(f' images : {images}')
+        tensor_img = images.tensor
+        num_images = images.image_sizes
+        # <class 'detectron2.structures.image_list.ImageList'>
+        print(f' tensor_img : {tensor_img} | num_images : {num_images}')
         # Feature Extraction.
         src = backbone_fpn_model(images.tensor)
         features = list()
