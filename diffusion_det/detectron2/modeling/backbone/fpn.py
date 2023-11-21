@@ -136,6 +136,7 @@ class FPN(Backbone):
                 paper convention: "p<stage>", where stage has stride = 2 ** stage e.g.,
                 ["p2", "p3", ..., "p6"].
         """
+        print(f'Extracting Features from FPN model')
         bottom_up_features = self.bottom_up(x)
         results = []
         prev_features = self.lateral_convs[0](bottom_up_features[self.in_features[-1]])

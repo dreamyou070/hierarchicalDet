@@ -348,6 +348,8 @@ def main(args) :
 
         print(f'(4.3) feature extracting')
         batch_tensor_input = images.tensor
+        print(f'(4.3.1) feature extracting')
+        # How does the model extracting feature ???
         src = backbone_fpn_model(batch_tensor_input)
         print(f' src : {src.keys()}')
 
