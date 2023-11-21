@@ -6,8 +6,6 @@ import time
 import warnings
 import cv2
 import tqdm
-from detectron2.config import get_cfg
-from detectron2.data.detection_utils import read_image
 from diffusiondet.predictor import VisualizationDemo
 from diffusiondet import DiffusionDetDatasetMapper, add_diffusiondet_config, DiffusionDetWithTTA
 from diffusiondet.util.model_ema import add_model_ema_configs, may_build_model_ema, may_get_ema_checkpointer, EMAHook, \
@@ -37,6 +35,8 @@ def test_opencv_video_format(codec, file_ext):
 import multiprocessing as mp
 import argparse
 from detectron2.utils.logger import setup_logger
+from detectron2.config import get_cfg
+from detectron2.data.detection_utils import read_image
 
 def main(args) :
 
@@ -65,6 +65,8 @@ def main(args) :
     for path in tqdm.tqdm(args.input, disable=not args.output):
         # use PIL, to be consistent with evaluation
         img = read_image(path, format="BGR")
+        print(f'read image : type(img) = {type(img)}')
+
 
 
 

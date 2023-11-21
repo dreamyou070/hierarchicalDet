@@ -119,30 +119,25 @@ def convert_image_to_rgb(image, format):
 def _apply_exif_orientation(image):
     """
     Applies the exif orientation correctly.
-
     This code exists per the bug:
       https://github.com/python-pillow/Pillow/issues/3973
     with the function `ImageOps.exif_transpose`. The Pillow source raises errors with
     various methods, especially `tobytes`
-
     Function based on:
       https://github.com/wkentaro/labelme/blob/v4.5.4/labelme/utils/image.py#L59
       https://github.com/python-pillow/Pillow/blob/7.1.2/src/PIL/ImageOps.py#L527
-
     Args:
         image (PIL.Image): a PIL image
-
     Returns:
         (PIL.Image): the PIL image with exif orientation applied, if applicable
     """
     if not hasattr(image, "getexif"):
+        print(f'image is just returned ...')
         return image
-
     try:
         exif = image.getexif()
     except Exception:  # https://github.com/facebookresearch/detectron2/issues/1885
         exif = None
-
     if exif is None:
         return image
 
@@ -167,11 +162,9 @@ def read_image(file_name, format=None):
     """
     Read an image into the given format.
     Will apply rotation and flipping if the image has such exif information.
-
     Args:
         file_name (str): image file path
         format (str): one of the supported image modes in PIL, or "BGR" or "YUV-BT.601".
-
     Returns:
         image (np.ndarray):
             an HWC image in the given format, which is 0-255, uint8 for
