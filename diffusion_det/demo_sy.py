@@ -60,7 +60,13 @@ def main(args) :
     cfg.MODEL.PANOPTIC_FPN.COMBINE.INSTANCES_CONFIDENCE_THRESH = args.confidence_threshold
     cfg.freeze()
     print(cfg)
-    #print("Configuration: " + cfg)
+
+    print(f'\n step 3. ')
+    if len(args.input) == 1:
+        img_dir = args.input[0]
+        expanded_path = os.path.expanduser(img_dir)
+        args.input = glob.glob(expanded_path)
+        print(args.input)
 
 
 
