@@ -355,8 +355,8 @@ def main(args) :
         image = predictor.aug.get_transform(original_image).apply_image(original_image)
         torch_image = torch.as_tensor(image.astype("float32").transpose(2, 0, 1))
         inputs = {"image": torch_image, "height": height, "width": width}
-        print(f' manually batchwised input (maybe 1, W, H): {inputs.shape}')
-        
+        print(f' manually batchwised input (maybe 1, W, H): {inputs["image"].shape}')
+
         predictions = detection_pipeline.run_on_image(np_img)
         """
         batched_inputs = 
