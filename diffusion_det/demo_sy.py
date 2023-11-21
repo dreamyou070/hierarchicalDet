@@ -63,11 +63,10 @@ def main(args) :
 
     print(f'\n step 3. ')
     if len(args.input) == 1:
-        img_dir = args.input[0]
-        expanded_path = os.path.expanduser(img_dir)
-        print(expanded_path)
-        args.input = glob.glob(expanded_path)
-        print(args.input)
+        args.input = args.input[0]
+    for path in tqdm.tqdm(args.input, disable=not args.output):
+        # use PIL, to be consistent with evaluation
+        img = read_image(path, format="BGR")
 
 
 
