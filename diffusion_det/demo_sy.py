@@ -333,7 +333,7 @@ def main(args) :
     print(f' (3.2) loading pretrained model weights')
     checkpointer = predictor.checkpointer #load(path=cfg.MODEL.WEIGHTS)
     checkpointer.load(path=cfg.MODEL.WEIGHTS)
-
+    print(f'model : {model.__class__.__name__}')
     component_models = model.named_children()
     for name, component_model in component_models :
         print(f'  - {name} : {component_model.__class__.__name__}')
@@ -344,8 +344,21 @@ def main(args) :
     print(f'\n step 4. check FPN model')
     backbone_model = model.backbone  # FPN
     FPN_component_models = backbone_model.named_children()
+    """
     for name, component_model in FPN_component_models :
-        print(f'  - [FPN] {name} : {component_model.__class__.__name__}')
+        print(f'  - [FPN] {name} : {component_model.__class__.__name__}')    
+      - [FPN] fpn_lateral2 : Conv2d
+      - [FPN] fpn_output2 : Conv2d
+      - [FPN] fpn_lateral3 : Conv2d
+      - [FPN] fpn_output3 : Conv2d
+      - [FPN] fpn_lateral4 : Conv2d
+      - [FPN] fpn_output4 : Conv2d
+      - [FPN] fpn_lateral5 : Conv2d
+      - [FPN] fpn_output5 : Conv2d
+      - [FPN] top_block : LastLevelMaxPool
+      - [FPN] bottom_up : SwinTransformer
+    """
+
     """
     print(f'\n step 4. inference')
     for path in tqdm.tqdm(args.input, disable=not args.output):
