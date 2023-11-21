@@ -356,8 +356,8 @@ def main(args) :
         for f in diffusion_det_model.in_features:
             # f = ['p2', 'p3', 'p4', 'p5']
             feature = src[f]
+            print(f' feature at {f} = {feature.shape}')
             features.append(feature)
-
         results = diffusion_det_model.ddim_sample(batched_inputs,
                                                   features,
                                                   images_whwh,
