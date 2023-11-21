@@ -25,6 +25,7 @@ from detectron2.data.detection_utils import read_image
 from detectron2.utils.file_io import PathManager
 from detectron2.checkpoint.c2_model_loading import align_and_update_state_dicts
 from detectron2.modeling import build_model
+from diffusiondet.util.misc import nested_tensor_from_tensor_list
 
 class DetectionCheckpointer(Checkpointer):
     """
@@ -282,22 +283,6 @@ class VisualizationDemo(object):
 # constants
 WINDOW_NAME = "COCO detections"
 
-def test_opencv_video_format(codec, file_ext):
-    with tempfile.TemporaryDirectory(prefix="video_format_test") as dir:
-        filename = os.path.join(dir, "test_file" + file_ext)
-        writer = cv2.VideoWriter(
-            filename=filename,
-            fourcc=cv2.VideoWriter_fourcc(*codec),
-            fps=float(30),
-            frameSize=(10, 10),
-            isColor=True,
-        )
-        [writer.write(np.zeros((10, 10, 3), np.uint8)) for _ in range(30)]
-        writer.release()
-        if os.path.isfile(filename):
-            return True
-        return False
-
 def main(args) :
 
     print(f'\n step 1. set logger')
@@ -352,9 +337,8 @@ def main(args) :
         torch_image = torch.as_tensor(image.astype("float32").transpose(2, 0, 1))
         inputs = {"image": torch_image, "height": height, "width": width}
         batched_inputs = [inputs]
-        images, images_whwh = predictor.preprocess_image(batched_inputs)
+        images, images_whwh = diffusion_det_model.preprocess_image(batched_inputs)
         print(f' manually batchwised input (maybe 1, W, H): {inputs["image"].shape}')
-        from diffusiondet.util.misc import nested_tensor_from_tensor_list
         if isinstance(images, (list, torch.Tensor)):
             images = nested_tensor_from_tensor_list(images)
 
