@@ -343,14 +343,18 @@ def main(args) :
 
         print(f'(4.2) preprocess image')
         images, images_whwh = diffusion_det_model.preprocess_image(batched_inputs)
-        tensor_img = images.tensor
-        num_images = images.image_sizes
-        # <class 'detectron2.structures.image_list.ImageList'>
-        print(f' tensor_img : {tensor_img.shape} | num_images : {num_images}')
-        # Feature Extraction.
-        src = backbone_fpn_model(images.tensor)
+        #tensor_img = images.tensor = [1,3,h,w]
+        #num_images = images.image_sizes = [(h,w)]
+
+        print(f'(4.3) feature extracting')
+        batch_tensor_input = images.tensor
+        src = backbone_fpn_model(batch_tensor_input)
+        print(f' src : {src.keys()}')
+
+        # diffusion_det_model.in_features = cfg.MODEL.ROI_HEADS.IN_FEATURES = IN_FEATURES: ['p2', 'p3', 'p4', 'p5']
         features = list()
         for f in diffusion_det_model.in_features:
+            # f = ['p2', 'p3', 'p4', 'p5']
             feature = src[f]
             features.append(feature)
 
