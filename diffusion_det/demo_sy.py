@@ -341,10 +341,12 @@ def main(args) :
                   "width": width}
         batched_inputs = [inputs]
 
-        print(f'(4.2) preprocess image (list to tensor)')
+        print(f'(4.2) preprocess image')
         images, images_whwh = diffusion_det_model.preprocess_image(batched_inputs)
-        print(f'images (1,3,800,1199) : {images.shape}')
-
+        if isinstance(images, (list, torch.Tensor)):
+            print(f'Here does not using ... ')
+            images = nested_tensor_from_tensor_list(images)
+        print(f' images : {type(images)}')
         # Feature Extraction.
         src = backbone_fpn_model(images.tensor)
         features = list()
