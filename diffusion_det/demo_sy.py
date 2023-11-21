@@ -65,6 +65,7 @@ def main(args) :
     if len(args.input) == 1:
         img_dir = args.input[0]
         expanded_path = os.path.expanduser(img_dir)
+        print(expanded_path)
         args.input = glob.glob(expanded_path)
         print(args.input)
 
