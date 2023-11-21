@@ -346,7 +346,7 @@ def main(args) :
         tensor_img = images.tensor
         num_images = images.image_sizes
         # <class 'detectron2.structures.image_list.ImageList'>
-        print(f' tensor_img : {tensor_img} | num_images : {num_images}')
+        print(f' tensor_img : {tensor_img.shape} | num_images : {num_images}')
         # Feature Extraction.
         src = backbone_fpn_model(images.tensor)
         features = list()
