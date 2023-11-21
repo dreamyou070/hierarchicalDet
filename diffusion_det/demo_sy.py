@@ -17,29 +17,6 @@ from diffusiondet.util.model_ema import add_model_ema_configs, may_build_model_e
 WINDOW_NAME = "COCO detections"
 
 
-def setup_cfg(args):
-    # load config from file and command-line arguments
-    cfg = get_cfg()
-    # To use demo for Panoptic-DeepLab, please uncomment the following two lines.
-    # from detectron2.projects.panoptic_deeplab import add_panoptic_deeplab_config  # noqa
-    # add_panoptic_deeplab_config(cfg)
-    add_diffusiondet_config(cfg)
-    add_model_ema_configs(cfg)
-    cfg.merge_from_file(args.config_file)
-    cfg.merge_from_list(args.opts)
-    # Set score_threshold for builtin models
-    cfg.MODEL.RETINANET.SCORE_THRESH_TEST = args.confidence_threshold
-    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = args.confidence_threshold
-    cfg.MODEL.PANOPTIC_FPN.COMBINE.INSTANCES_CONFIDENCE_THRESH = args.confidence_threshold
-    cfg.freeze()
-    return cfg
-
-
-def get_parser():
-
-    return parser
-
-
 def test_opencv_video_format(codec, file_ext):
     with tempfile.TemporaryDirectory(prefix="video_format_test") as dir:
         filename = os.path.join(dir, "test_file" + file_ext)
@@ -63,9 +40,28 @@ from detectron2.utils.logger import setup_logger
 
 def main(args) :
 
+    print(f'\n step 1. set logger')
     setup_logger(name="fvcore")
     logger = setup_logger()
     logger.info("Arguments: " + str(args))
+
+    print(f'\n step 2. get argument')
+    print(f' (1)  basic config')
+    cfg = get_cfg()
+    print(f' (2) model config')
+    add_diffusiondet_config(cfg)
+    add_model_ema_configs(cfg)
+    print(f' (3) inference config')
+    cfg.merge_from_file(args.config_file)
+    cfg.merge_from_list(args.opts)
+    print(f' (4) add score info')
+    cfg.MODEL.RETINANET.SCORE_THRESH_TEST = args.confidence_threshold
+    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = args.confidence_threshold
+    cfg.MODEL.PANOPTIC_FPN.COMBINE.INSTANCES_CONFIDENCE_THRESH = args.confidence_threshold
+    cfg.freeze()
+    logger.info("Configuration: " + cfg)
+
+
 
 if __name__ == "__main__":
     mp.set_start_method("spawn", force=True)
