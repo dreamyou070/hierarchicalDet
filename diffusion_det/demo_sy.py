@@ -327,6 +327,7 @@ def main(args) :
     # DefaultPredictor
     print(f' (3.1) make scratch model')
     predictor = detection_pipeline.predictor
+    print(f' name of predictor : {predictor.__class__.__name__}')
     model = predictor.model
     print(f' (3.2) loading pretrained model weights')
     checkpointer = predictor.checkpointer #load(path=cfg.MODEL.WEIGHTS)
@@ -349,6 +350,13 @@ def main(args) :
         # use PIL, to be consistent with evaluation
         print(f'(4.1) read image')
         np_img = read_image(path, format="BGR")
+        original_image = np_img[:, :, ::-1]
+        height, width = original_image.shape[:2]
+        image = predictor.aug.get_transform(original_image).apply_image(original_image)
+        torch_image = torch.as_tensor(image.astype("float32").transpose(2, 0, 1))
+        inputs = {"image": torch_image, "height": height, "width": width}
+        print(f' manually batchwised input (maybe 1, W, H): {inputs.shape}')
+        
         predictions = detection_pipeline.run_on_image(np_img)
         """
         batched_inputs = 

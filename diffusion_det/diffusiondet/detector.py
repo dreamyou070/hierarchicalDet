@@ -275,18 +275,17 @@ class DiffusionDet(nn.Module):
         return sqrt_alphas_cumprod_t * x_start + sqrt_one_minus_alphas_cumprod_t * noise
 
     def forward(self, batched_inputs, do_postprocess=True):
-        print(f'batched_inputs : {batched_inputs}')
+
+        input_image = batched_inputs['image']
+        print(f'[tensor] input_image (maybe 3,W,H): {input_image.shape}')
         """
         Args:
             batched_inputs: a list, batched outputs of :class:`DatasetMapper` .
                 Each item in the list contains the inputs for one image.
                 For now, each item in the list is a dict that contains:
-
                 * image: Tensor, image in (C, H, W) format.
                 * instances: Instances
-
                 Other information that's included in the original dicts, such as:
-
                 * "height", "width" (int): the output resolution of the model, used in inference.
                   See :meth:`postprocess` for details.
         """
