@@ -337,7 +337,7 @@ def main(args) :
     component_models = model.named_children()
     for name, component_model in component_models :
         print(f'  - {name} : {component_model.__class__.__name__}')
-
+    backbone_model = model.backbone
     """
     print(f'\n step 4. inference')
     for path in tqdm.tqdm(args.input, disable=not args.output):
